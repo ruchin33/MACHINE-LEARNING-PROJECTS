@@ -1,0 +1,1176 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{boston\_housing}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \subsection{Model Evaluation \&
+Validation}\label{model-evaluation-validation}
+
+\subsection{Project: Predicting Boston Housing
+Prices}\label{project-predicting-boston-housing-prices}
+
+    In this project, we will evaluate the performance and predictive power
+of a model that has been trained and tested on data collected from homes
+in suburbs of Boston, Massachusetts. A model trained on this data that
+is seen as a \emph{good fit} could then be used to make certain
+predictions about a home --- in particular, its monetary value. This
+model would prove to be invaluable for someone like a real estate agent
+who could make use of such information on a daily basis.
+
+The dataset for this project originates from the
+\href{https://archive.ics.uci.edu/ml/datasets/Housing}{UCI Machine
+Learning Repository}. The Boston housing data was collected in 1978 and
+each of the 506 entries represent aggregated data about 14 features for
+homes from various suburbs in Boston, Massachusetts. For the purposes of
+this project, the following preprocessing steps have been made to the
+dataset: - 16 data points have an
+\texttt{\textquotesingle{}MEDV\textquotesingle{}} value of 50.0. These
+data points likely contain \textbf{missing or censored values} and have
+been removed. - 1 data point has an
+\texttt{\textquotesingle{}RM\textquotesingle{}} value of 8.78. This data
+point can be considered an \textbf{outlier} and has been removed. - The
+features \texttt{\textquotesingle{}RM\textquotesingle{}},
+\texttt{\textquotesingle{}LSTAT\textquotesingle{}},
+\texttt{\textquotesingle{}PTRATIO\textquotesingle{}}, and
+\texttt{\textquotesingle{}MEDV\textquotesingle{}} are essential. The
+remaining \textbf{non-relevant features} have been excluded. - The
+feature \texttt{\textquotesingle{}MEDV\textquotesingle{}} has been
+\textbf{multiplicatively scaled} to account for 35 years of market
+inflation.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{c+c1}{\PYZsh{} Import libraries necessary for this project}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{ShuffleSplit}
+        
+        \PY{c+c1}{\PYZsh{} Import supplementary visualizations code visuals.py}
+        \PY{k+kn}{import} \PY{n+nn}{visuals} \PY{k}{as} \PY{n+nn}{vs}
+        
+        \PY{c+c1}{\PYZsh{} Pretty display for notebooks}
+        \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+        
+        \PY{c+c1}{\PYZsh{} Load the Boston housing dataset}
+        \PY{n}{data} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{housing.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{prices} \PY{o}{=} \PY{n}{data}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MEDV}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+        \PY{n}{features} \PY{o}{=} \PY{n}{data}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{MEDV}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{axis} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{)}
+            
+        \PY{c+c1}{\PYZsh{} Success}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Boston housing dataset has }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{ data points with }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{ variables each.}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{o}{*}\PY{n}{data}\PY{o}{.}\PY{n}{shape}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Boston housing dataset has 489 data points with 4 variables each.
+
+    \end{Verbatim}
+
+    \subsection{Data Exploration}\label{data-exploration}
+
+In this first section of this project, we will make a cursory
+investigation about the Boston housing data and provide our
+observations. Familiarizing oneself with the data through an explorative
+process is a fundamental practice to help one better understand and
+justify ones results.
+
+Since the main goal of this project is to construct a working model
+which has the capability of predicting the value of houses, we will need
+to separate the dataset into \textbf{features} and the \textbf{target
+variable}. The \textbf{features},
+\texttt{\textquotesingle{}RM\textquotesingle{}},
+\texttt{\textquotesingle{}LSTAT\textquotesingle{}}, and
+\texttt{\textquotesingle{}PTRATIO\textquotesingle{}}, give us
+quantitative information about each data point. The \textbf{target
+variable}, \texttt{\textquotesingle{}MEDV\textquotesingle{}}, will be
+the variable we seek to predict. These are stored in \texttt{features}
+and \texttt{prices}, respectively.
+
+    \subsubsection{Implementation: Calculate
+Statistics}\label{implementation-calculate-statistics}
+
+We will calculate descriptive statistics about the Boston housing
+prices. These statistics will be extremely important later on to analyze
+various prediction results from the constructed model.
+
+In the code cell below, you will need to implement the following: -
+Calculate the minimum, maximum, mean, median, and standard deviation of
+\texttt{\textquotesingle{}MEDV\textquotesingle{}}, which is stored in
+\texttt{prices}. - Store each calculation in their respective variable.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{c+c1}{\PYZsh{} TODO: Minimum price of the data}
+        \PY{n}{minimum\PYZus{}price} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{amin}\PY{p}{(}\PY{n}{prices}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} TODO: Maximum price of the data}
+        \PY{n}{maximum\PYZus{}price} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{amax}\PY{p}{(}\PY{n}{prices}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} TODO: Mean price of the data}
+        \PY{n}{mean\PYZus{}price} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{n}{prices}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} TODO: Median price of the data}
+        \PY{n}{median\PYZus{}price} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{median}\PY{p}{(}\PY{n}{prices}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} TODO: Standard deviation of prices of the data}
+        \PY{n}{std\PYZus{}price} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{prices}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Show the calculated statistics}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Statistics for Boston housing dataset:}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Minimum price: \PYZdl{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{minimum\PYZus{}price}\PY{p}{)}\PY{p}{)} 
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Maximum price: \PYZdl{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{maximum\PYZus{}price}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Mean price: \PYZdl{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{mean\PYZus{}price}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Median price \PYZdl{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{median\PYZus{}price}\PY{p}{)}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Standard deviation of prices: \PYZdl{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{std\PYZus{}price}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Statistics for Boston housing dataset:
+
+Minimum price: \$105000.0
+Maximum price: \$1024800.0
+Mean price: \$454342.9447852761
+Median price \$438900.0
+Standard deviation of prices: \$165171.13154429477
+
+    \end{Verbatim}
+
+    \subsubsection{Feature Observation}\label{feature-observation}
+
+As a reminder, we are using three features from the Boston housing
+dataset: \texttt{\textquotesingle{}RM\textquotesingle{}},
+\texttt{\textquotesingle{}LSTAT\textquotesingle{}}, and
+\texttt{\textquotesingle{}PTRATIO\textquotesingle{}}. For each data
+point (neighborhood): - \texttt{\textquotesingle{}RM\textquotesingle{}}
+is the average number of rooms among homes in the neighborhood. -
+\texttt{\textquotesingle{}LSTAT\textquotesingle{}} is the percentage of
+homeowners in the neighborhood considered "lower class" (working poor).
+- \texttt{\textquotesingle{}PTRATIO\textquotesingle{}} is the ratio of
+students to teachers in primary and secondary schools in the
+neighborhood.
+
+** Using our intuition, for each of the three features above, is it
+possible that an increase in the value of that feature would lead to an
+\textbf{increase} in the value of
+\texttt{\textquotesingle{}MEDV\textquotesingle{}} or a \textbf{decrease}
+in the value of \texttt{\textquotesingle{}MEDV\textquotesingle{}}?We
+will try to justify our answer for each.**
+
+** We can build by keeping in mind the following questions. **
+
+\begin{itemize}
+\tightlist
+\item
+  Would you expect a home that has an
+  \texttt{\textquotesingle{}RM\textquotesingle{}} value(number of rooms)
+  of 6 be worth more or less than a home that has an
+  \texttt{\textquotesingle{}RM\textquotesingle{}} value of 7?
+\item
+  Would you expect a neighborhood that has an
+  \texttt{\textquotesingle{}LSTAT\textquotesingle{}} value(percent of
+  lower class workers) of 15 have home prices be worth more or less than
+  a neighborhood that has an
+  \texttt{\textquotesingle{}LSTAT\textquotesingle{}} value of 20?
+\item
+  Would you expect a neighborhood that has an
+  \texttt{\textquotesingle{}PTRATIO\textquotesingle{}} value(ratio of
+  students to teachers) of 10 have home prices be worth more or less
+  than a neighborhood that has an
+  \texttt{\textquotesingle{}PTRATIO\textquotesingle{}} value of 15?
+\end{itemize}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{prices}\PY{p}{,} \PY{n}{features}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{RM}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,}\PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{prices}\PY{p}{,} \PY{n}{features}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{LSTAT}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,} \PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{prices}\PY{p}{,} \PY{n}{features}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{PTRATIO}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZca{}}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.7}\PY{p}{,} \PY{n}{color} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_7_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_7_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_7_2.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \section{Answer:}\label{answer}
+
+\subsection{RM:}\label{rm}
+
+\begin{itemize}
+\tightlist
+\item
+  If the value of RM increases the value of MEDV in that neighbourhood
+  also increases whereas lower value of RM results in lower MEDV. This
+  is because higher number of rooms mean higher square footage and that
+  means the house is comparitively bigger and hence the increase in
+  price.
+\end{itemize}
+
+\subsection{LSTAT:}\label{lstat}
+
+\begin{itemize}
+\tightlist
+\item
+  If value of LSTAT increases the value of MEDV would decrease and vice
+  versa. Since the value of LSTAT is high, this means that the area has
+  a higher number of lower class people, which means that the
+  neighbourhood is not that good and a bad neighbourhood is definitely
+  going to have lower house prices.
+\end{itemize}
+
+\subsection{PTRATIO:}\label{ptratio}
+
+\begin{itemize}
+\tightlist
+\item
+  A lower PTRATIO means that there are lesser number of student per one
+  teacher in agiven neighbourhood. Generally such a trend is seen in
+  rich neighbourhoods where there are more private schools and where the
+  number of students in a school are less so that the teachers can
+  better mentor each student. Thus lower PTRATIO means high MEDV and
+  higher PTRATIO means low MEDV
+\end{itemize}
+
+    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection{Developing a Model}\label{developing-a-model}
+
+In this second section of the project, we will develop the tools and
+techniques necessary for a model to make a prediction. Being able to
+make accurate evaluations of each model's performance through the use of
+these tools and techniques helps to greatly reinforce the confidence in
+our predictions.
+
+    \subsubsection{Implementation: Define a Performance
+Metric}\label{implementation-define-a-performance-metric}
+
+It is difficult to measure the quality of a given model without
+quantifying its performance over training and testing. This is typically
+done using some type of performance metric, whether it is through
+calculating some type of error, the goodness of fit, or some other
+useful measurement. For this project, we will be calculating the
+\href{http://stattrek.com/statistics/dictionary.aspx?definition=coefficient_of_determination}{\emph{coefficient
+of determination}}, R2, to quantify your model's performance. The
+coefficient of determination for a model is a useful statistic in
+regression analysis, as it often describes how "good" that model is at
+making predictions.
+
+The values for R2 range from 0 to 1, which captures the percentage of
+squared correlation between the predicted and actual values of the
+\textbf{target variable}. A model with an R2 of 0 is no better than a
+model that always predicts the \emph{mean} of the target variable,
+whereas a model with an R2 of 1 perfectly predicts the target variable.
+Any value between 0 and 1 indicates what percentage of the target
+variable, using this model, can be explained by the \textbf{features}.
+\emph{A model can be given a negative R2 as well, which indicates that
+the model is \textbf{arbitrarily worse} than one that always predicts
+the mean of the target variable.}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{c+c1}{\PYZsh{} TODO: Import \PYZsq{}r2\PYZus{}score\PYZsq{}}
+        
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k}{import} \PY{n}{r2\PYZus{}score}
+        
+        \PY{k}{def} \PY{n+nf}{performance\PYZus{}metric}\PY{p}{(}\PY{n}{y\PYZus{}true}\PY{p}{,} \PY{n}{y\PYZus{}predict}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Calculates and returns the performance score between }
+        \PY{l+s+sd}{        true and predicted values based on the metric chosen. \PYZdq{}\PYZdq{}\PYZdq{}}
+            
+            \PY{c+c1}{\PYZsh{} TODO: Calculate the performance score between \PYZsq{}y\PYZus{}true\PYZsq{} and \PYZsq{}y\PYZus{}predict\PYZsq{}}
+            \PY{n}{score} \PY{o}{=} \PY{n}{r2\PYZus{}score}\PY{p}{(}\PY{n}{y\PYZus{}true}\PY{p}{,} \PY{n}{y\PYZus{}predict}\PY{p}{)}
+            
+            \PY{c+c1}{\PYZsh{} Return the score}
+            \PY{k}{return} \PY{n}{score}
+\end{Verbatim}
+
+
+    \subsubsection{Goodness of Fit}\label{goodness-of-fit}
+
+Assume that a dataset contains five data points and a model made the
+following predictions for the target variable:
+
+\begin{longtable}[]{@{}cc@{}}
+\toprule
+True Value & Prediction\tabularnewline
+\midrule
+\endhead
+3.0 & 2.5\tabularnewline
+-0.5 & 0.0\tabularnewline
+2.0 & 2.1\tabularnewline
+7.0 & 7.8\tabularnewline
+4.2 & 5.3\tabularnewline
+\bottomrule
+\end{longtable}
+
+Run the code cell below to use the \texttt{performance\_metric} function
+and calculate this model's coefficient of determination.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{c+c1}{\PYZsh{} Calculate the performance of this model}
+        \PY{n}{score} \PY{o}{=} \PY{n}{performance\PYZus{}metric}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mf}{0.5}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{7}\PY{p}{,} \PY{l+m+mf}{4.2}\PY{p}{]}\PY{p}{,} \PY{p}{[}\PY{l+m+mf}{2.5}\PY{p}{,} \PY{l+m+mf}{0.0}\PY{p}{,} \PY{l+m+mf}{2.1}\PY{p}{,} \PY{l+m+mf}{7.8}\PY{p}{,} \PY{l+m+mf}{5.3}\PY{p}{]}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Model has a coefficient of determination, R\PYZca{}2, of }\PY{l+s+si}{\PYZob{}:.3f\PYZcb{}}\PY{l+s+s2}{.}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{score}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Model has a coefficient of determination, R\^{}2, of 0.923.
+
+    \end{Verbatim}
+
+    ** This generates the following questions: ** * Would you consider this
+model to have successfully captured the variation of the target
+variable? * Why or why not?
+
+** We should bear in mind the following points while answering the above
+questions. **
+
+\begin{itemize}
+\tightlist
+\item
+  The R2 score is the proportion of the variance in the dependent
+  variable that is predictable from the independent variable. In other
+  words:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    R2 score of 0 means that the dependent variable cannot be predicted
+    from the independent variable.
+  \item
+    R2 score of 1 means the dependent variable can be predicted from the
+    independent variable.
+  \item
+    R2 score between 0 and 1 indicates the extent to which the dependent
+    variable is predictable. An
+  \item
+    R2 score of 0.40 means that 40 percent of the variance in Y is
+    predictable from X.
+  \end{itemize}
+\end{itemize}
+
+    **Answer:* Yes I would consider the model to have successfully captured
+the variation of the target variable because the R2 score of 0.923 which
+is very close to 1 indicates that the dependent variable can be
+predicted from the independent variable with a very high likelihood.*
+
+    \subsubsection{Implementation: Shuffle and Split
+Data}\label{implementation-shuffle-and-split-data}
+
+Our next implementation requires that you take the Boston housing
+dataset and split the data into training and testing subsets. Typically,
+the data is also shuffled into a random order when creating the training
+and testing subsets to remove any bias in the ordering of the dataset.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{c+c1}{\PYZsh{} TODO: Import \PYZsq{}train\PYZus{}test\PYZus{}split\PYZsq{}}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{train\PYZus{}test\PYZus{}split}
+        
+        \PY{c+c1}{\PYZsh{} TODO: Shuffle and split the data into training and testing subsets}
+        \PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{X\PYZus{}test}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}test} \PY{o}{=} \PY{n}{train\PYZus{}test\PYZus{}split}\PY{p}{(}\PY{n}{features}\PY{p}{,} \PY{n}{prices}\PY{p}{,} \PY{n}{test\PYZus{}size}\PY{o}{=}\PY{l+m+mf}{0.2}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Success}
+        \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training and testing split was successful.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Training and testing split was successful.
+
+    \end{Verbatim}
+
+    \subsubsection{Training and Testing}\label{training-and-testing}
+
+\begin{itemize}
+\tightlist
+\item
+  What is the benefit to splitting a dataset into some ratio of training
+  and testing subsets for a learning algorithm?
+\end{itemize}
+
+    **Answer: * As seen above we split the data in such a way that the
+training set has 80\% of the data and testing set has 20\% of the data.
+This makes sense because as we will train the parameters and hyper
+parameters of our model on the higher bulk of data which ensures that
+our model generalizes well, which is to say that it neither underfits
+nor overfits. Finally after training our model we test that model on the
+20\% of the data that was perviously hidden to training to make sure
+that our model has indeed generalized well.*
+
+    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection{Analyzing Model
+Performance}\label{analyzing-model-performance}
+
+In this third section of the project, we'll take a look at several
+models' learning and testing performances on various subsets of training
+data. Additionally, you'll investigate one particular algorithm with an
+increasing \texttt{\textquotesingle{}max\_depth\textquotesingle{}}
+parameter on the full training set to observe how model complexity
+affects performance. Graphing your model's performance based on varying
+criteria can be beneficial in the analysis process, such as visualizing
+behavior that may not have been apparent from the results alone.
+
+    \subsubsection{Learning Curves}\label{learning-curves}
+
+The following code cell produces four graphs for a decision tree model
+with different maximum depths. Each graph visualizes the learning curves
+of the model for both training and testing as the size of the training
+set is increased. Note that the shaded region of a learning curve
+denotes the uncertainty of that curve (measured as the standard
+deviation). The model is scored on both the training and testing sets
+using R2, the coefficient of determination.
+
+Run the code cell below and use these graphs to answer the following
+question.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{c+c1}{\PYZsh{} Produce learning curves for varying training set sizes and maximum depths}
+        \PY{n}{vs}\PY{o}{.}\PY{n}{ModelLearning}\PY{p}{(}\PY{n}{features}\PY{p}{,} \PY{n}{prices}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_22_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Learning the Data}\label{learning-the-data}
+
+\begin{itemize}
+\tightlist
+\item
+  We will try to analyze one of the graphs above and state the maximum
+  depth for the model.
+\item
+  What happens to the score of the training curve as more training
+  points are added? What about the testing curve?
+\item
+  Would having more training points benefit the model?
+\end{itemize}
+
+\textbf{Hint:} Are the learning curves converging to particular scores?
+Generally speaking, the more data you have, the better. But if your
+training and testing curves are converging with a score above your
+benchmark threshold, would this be necessary? Think about the pros and
+cons of adding more training points based on if the training and testing
+curves are converging.
+
+    **Answer: * The graph chosen by me is the one with max\_depth = 10 * As
+shown in the graph initially when there are less data points the testing
+score is very less and the training score is very high. As more and more
+data points are added the training score remains 1 where as testing
+score increases and becomes constant at some point. This suggests that
+when we have a maximum depth of 10 for a model, then we are actually
+overfitting the data, i.e the model with max\_depth = 10 has a high
+variance. * Also as shown in the graph adding more than 150 data points
+is not going to do us much good as the testing score remains almost
+constant after that and this suggests that our model has reached its
+limit. Thus in order to save our resources we should stop adding data
+points for this model after certain level of testing score is achieved.
+
+    \subsubsection{Complexity Curves}\label{complexity-curves}
+
+The following code cell produces a graph for a decision tree model that
+has been trained and validated on the training data using different
+maximum depths. The graph produces two complexity curves --- one for
+training and one for validation. Similar to the \textbf{learning
+curves}, the shaded regions of both the complexity curves denote the
+uncertainty in those curves, and the model is scored on both the
+training and validation sets using the \texttt{performance\_metric}
+function.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{n}{vs}\PY{o}{.}\PY{n}{ModelComplexity}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_26_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \subsubsection{Bias-Variance Tradeoff}\label{bias-variance-tradeoff}
+
+\begin{itemize}
+\tightlist
+\item
+  When the model is trained with a maximum depth of 1, does the model
+  suffer from high bias or from high variance?
+\item
+  How about when the model is trained with a maximum depth of 10? What
+  visual cues in the graph justify your conclusions?
+\end{itemize}
+
+    **Answer: * When model is trained at max\_depth 1 the model suffers from
+high bias, that is the model is underfitting the data. * When it is
+trained at max\_depth 10 the model suffers from high variance. As we can
+see from the graph, at max\_depth 10 the training score is very
+high(almost 1) which suggests that the model perfectly classifies all
+the training data, however the validation score is less, infact after
+max\_depth = 4, the validation scores decreases continuously with
+increasing depths which suggests that our model with max\_depth = 10 has
+overfitted the data and does not generalize well and it is due to this
+that training score is very high and validation score is very low.
+
+    \subsubsection{Best-Guess Optimal Model}\label{best-guess-optimal-model}
+
+\begin{itemize}
+\tightlist
+\item
+  Which maximum depth do we think results in a model that best
+  generalizes to unseen data?
+\item
+  What intuition lead you to this answer?
+\end{itemize}
+
+** Hint: ** Look at the graph above Question 5 and see where the
+validation scores lie for the various depths that have been assigned to
+the model. Does it get better with increased depth? At what point do we
+get our best validation score without overcomplicating our model? And
+remember, Occams Razor states "Among competing hypotheses, the one with
+the fewest assumptions should be selected."
+
+    **Answer: * Max\_depth of 4 best generalizes the model to unseen data. *
+The reason for this is that, if we look at the graph above, the
+validation scores for max\_depth \textless{} 4 and max\_depth
+\textgreater{} 4 are less than the validation score of max\_depth = 4.
+Thus even though the training score of max\_depth = 4 is less than other
+depths, this max\_depth = 4 has the highest validation score and it is
+the score on unseen data which we are interested in as it gives us the
+best information about the generalization of the model.
+
+    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection{Evaluating Model
+Performance}\label{evaluating-model-performance}
+
+In this final section of the project, we will construct a model and make
+a prediction on the client's feature set using an optimized model from
+\texttt{fit\_model}.
+
+    \subsubsection{Grid Search}\label{grid-search}
+
+    \begin{itemize}
+\tightlist
+\item
+  A grid search technique is used to select the best hyper parameters of
+  a model.
+\item
+  When we are working with an SVM model with 'rbf' kernel, when gamma
+  and C are zero , the SVM model gives us a linear separating boundry
+  which separates clusters of two data points so as to classify them
+  correctly. So basically the SVM algorithm gives us weights for every
+  feature so as to form that seperating linear boundry and these weights
+  are the parameters of the SVM algorithm. The best of these parameters
+  can be selected through cross-validation. However at times the data is
+  not linearly separable and we need a more complex boundry than a
+  linear one. These circumstances are tackled by varying the values of
+  gamma and C. These gamma and C are the hyper-parameters of the SVM
+  model. Now checking which of these hyper parameters are the best at
+  separating the data is bit of a tedious task and this task is taken
+  care of by the grid-search method.So consider that we are interested
+  in 4 unique values of gamma and 4 unique values of C and we want to
+  select from these 8 values which combination of gamma and C would best
+  generalize on unseen data. The grid-search technique comes in here and
+  what it does is create a gird of 4 X 4 (16 values) combination of all
+  of the gamma and C and for each of those combination it will perform
+  the cross validation technique to select the parameters or weights of
+  the SVM model. Finally in the end from all of the 16 models, whichever
+  model has the highest score is selected. Thus instead of selecting
+  random values of gamma and C, we used grid search to find the best
+  values of hyper parameters along with choosing the best value of
+  parameters for an SVM model and in a sense optimized our model by
+  selecting the model that has the score. This general techique holds
+  for any other learning algorithm.
+\end{itemize}
+
+    \subsubsection{Cross-Validation}\label{cross-validation}
+
+    **Answer: * The k-fold cross validaion technique divides the data into k
+sub parts. For example if k = 5, then the data is divided in 5 parts and
+cross validation is done on the 5 sub parts in such a way that each of
+the the sub parts is used once as a validation set. At the end of it we
+average the results to get our final model. In k-fold cross validation
+we train the data k time and in the end the results are averaged. * The
+benifit that this technique provide for grid search is that, instead of
+using only some part of the data, we are using all of the data to train
+the model and this in turn generalizes our model well on unseen data.
+
+    \subsubsection{Implementation: Fitting a
+Model}\label{implementation-fitting-a-model}
+
+Our final implementation requires that we bring everything together and
+train a model using the \textbf{decision tree algorithm}. To ensure that
+we are producing an optimized model, we will train the model using the
+grid search technique to optimize the
+\texttt{\textquotesingle{}max\_depth\textquotesingle{}} parameter for
+the decision tree. The
+\texttt{\textquotesingle{}max\_depth\textquotesingle{}} parameter can be
+thought of as how many questions the decision tree algorithm is allowed
+to ask about the data before making a prediction. Decision trees are
+part of a class of algorithms called \emph{supervised learning
+algorithms}.
+
+In addition, we will find our implementation is using
+\texttt{ShuffleSplit()} for an alternative form of cross-validation (see
+the \texttt{\textquotesingle{}cv\_sets\textquotesingle{}} variable).
+While it is not the K-Fold cross-validation technique we described
+earlier, this type of cross-validation technique is just as useful!. The
+\texttt{ShuffleSplit()} implementation below will create 10
+(\texttt{\textquotesingle{}n\_splits\textquotesingle{}}) shuffled sets,
+and for each shuffle, 20\%
+(\texttt{\textquotesingle{}test\_size\textquotesingle{}}) of the data
+will be used as the \emph{validation set}. While you're working on your
+implementation, think about the contrasts and similarities it has to the
+K-fold cross-validation technique.
+
+Please note that ShuffleSplit has different parameters in scikit-learn
+versions 0.17 and 0.18. For the \texttt{fit\_model} function in the code
+cell below, you will need to implement the following: - Use
+\href{http://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html}{\texttt{DecisionTreeRegressor}}
+from \texttt{sklearn.tree} to create a decision tree regressor object. -
+Assign this object to the
+\texttt{\textquotesingle{}regressor\textquotesingle{}} variable. -
+Create a dictionary for
+\texttt{\textquotesingle{}max\_depth\textquotesingle{}} with the values
+from 1 to 10, and assign this to the
+\texttt{\textquotesingle{}params\textquotesingle{}} variable. - Use
+\href{http://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html}{\texttt{make\_scorer}}
+from \texttt{sklearn.metrics} to create a scoring function object. -
+Pass the \texttt{performance\_metric} function as a parameter to the
+object. - Assign this scoring function to the
+\texttt{\textquotesingle{}scoring\_fnc\textquotesingle{}} variable. -
+Use
+\href{http://scikit-learn.org/0.17/modules/generated/sklearn.grid_search.GridSearchCV.html}{\texttt{GridSearchCV}}
+from \texttt{sklearn.grid\_search} to create a grid search object. -
+Pass the variables
+\texttt{\textquotesingle{}regressor\textquotesingle{}},
+\texttt{\textquotesingle{}params\textquotesingle{}},
+\texttt{\textquotesingle{}scoring\_fnc\textquotesingle{}}, and
+\texttt{\textquotesingle{}cv\_sets\textquotesingle{}} as parameters to
+the object. - Assign the \texttt{GridSearchCV} object to the
+\texttt{\textquotesingle{}grid\textquotesingle{}} variable.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{c+c1}{\PYZsh{} TODO: Import \PYZsq{}make\PYZus{}scorer\PYZsq{}, \PYZsq{}DecisionTreeRegressor\PYZsq{}, and \PYZsq{}GridSearchCV\PYZsq{}}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{tree} \PY{k}{import} \PY{n}{DecisionTreeRegressor} 
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k}{import} \PY{n}{make\PYZus{}scorer}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{GridSearchCV}
+        
+        \PY{k}{def} \PY{n+nf}{fit\PYZus{}model}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}\PY{p}{:}
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Performs grid search over the \PYZsq{}max\PYZus{}depth\PYZsq{} parameter for a }
+        \PY{l+s+sd}{        decision tree regressor trained on the input data [X, y]. \PYZdq{}\PYZdq{}\PYZdq{}}
+            
+            \PY{c+c1}{\PYZsh{} Create cross\PYZhy{}validation sets from the training data}
+            \PY{c+c1}{\PYZsh{} sklearn version 0.18: ShuffleSplit(n\PYZus{}splits=10, test\PYZus{}size=0.1, train\PYZus{}size=None, random\PYZus{}state=None)}
+            \PY{c+c1}{\PYZsh{} sklearn versiin 0.17: ShuffleSplit(n, n\PYZus{}iter=10, test\PYZus{}size=0.1, train\PYZus{}size=None, random\PYZus{}state=None)}
+            \PY{c+c1}{\PYZsh{}cv\PYZus{}sets = ShuffleSplit(X.shape[0], n\PYZus{}iter = 10, test\PYZus{}size = 0.20, random\PYZus{}state = 0)}
+            \PY{n}{cv\PYZus{}sets} \PY{o}{=} \PY{n}{ShuffleSplit}\PY{p}{(}\PY{n}{n\PYZus{}splits} \PY{o}{=} \PY{l+m+mi}{10}\PY{p}{,} \PY{n}{test\PYZus{}size} \PY{o}{=} \PY{l+m+mf}{0.20}\PY{p}{,} \PY{n}{random\PYZus{}state} \PY{o}{=} \PY{l+m+mi}{0}\PY{p}{)}
+        
+        
+        
+            \PY{c+c1}{\PYZsh{} TODO: Create a decision tree regressor object}
+            \PY{n}{regressor} \PY{o}{=} \PY{n}{DecisionTreeRegressor}\PY{p}{(}\PY{p}{)}
+        
+            \PY{c+c1}{\PYZsh{} TODO: Create a dictionary for the parameter \PYZsq{}max\PYZus{}depth\PYZsq{} with a range from 1 to 10}
+            \PY{n}{params} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}depth}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{,}\PY{l+m+mi}{8}\PY{p}{,}\PY{l+m+mi}{9}\PY{p}{,}\PY{l+m+mi}{10}\PY{p}{]}\PY{p}{\PYZcb{}}
+        
+            
+            \PY{c+c1}{\PYZsh{} TODO: Transform \PYZsq{}performance\PYZus{}metric\PYZsq{} into a scoring function using \PYZsq{}make\PYZus{}scorer\PYZsq{} }
+            \PY{n}{scoring\PYZus{}fnc} \PY{o}{=} \PY{n}{make\PYZus{}scorer}\PY{p}{(}\PY{n}{r2\PYZus{}score}\PY{p}{)}
+        
+            \PY{c+c1}{\PYZsh{} TODO: Create the grid search cv object \PYZhy{}\PYZhy{}\PYZgt{} GridSearchCV()}
+            \PY{c+c1}{\PYZsh{} Make sure to include the right parameters in the object:}
+            \PY{c+c1}{\PYZsh{} (estimator, param\PYZus{}grid, scoring, cv) which have values \PYZsq{}regressor\PYZsq{}, \PYZsq{}params\PYZsq{}, \PYZsq{}scoring\PYZus{}fnc\PYZsq{}, and \PYZsq{}cv\PYZus{}sets\PYZsq{} respectively.}
+            \PY{n}{grid} \PY{o}{=} \PY{n}{GridSearchCV}\PY{p}{(}\PY{n}{regressor}\PY{p}{,}\PY{n}{params}\PY{p}{,}\PY{n}{scoring\PYZus{}fnc}\PY{p}{,}\PY{n}{cv}\PY{o}{=}\PY{n}{cv\PYZus{}sets}\PY{p}{)}
+        
+            \PY{c+c1}{\PYZsh{} Fit the grid search object to the data to compute the optimal model}
+            \PY{n}{grid} \PY{o}{=} \PY{n}{grid}\PY{o}{.}\PY{n}{fit}\PY{p}{(}\PY{n}{X}\PY{p}{,} \PY{n}{y}\PY{p}{)}
+        
+            \PY{c+c1}{\PYZsh{} Return the optimal model after fitting the data}
+            \PY{k}{return} \PY{n}{grid}\PY{o}{.}\PY{n}{best\PYZus{}estimator\PYZus{}}
+\end{Verbatim}
+
+
+    \subsubsection{Making Predictions}\label{making-predictions}
+
+Once a model has been trained on a given set of data, it can now be used
+to make predictions on new sets of input data. In the case of a
+\emph{decision tree regressor}, the model has learned \emph{what the
+best questions to ask about the input data are}, and can respond with a
+prediction for the \textbf{target variable}. You can use these
+predictions to gain information about data where the value of the target
+variable is unknown --- such as data the model was not trained on.
+
+    \subsubsection{Optimal Model}\label{optimal-model}
+
+\begin{itemize}
+\tightlist
+\item
+  What maximum depth does the optimal model have? How does this result
+  compare to our guess ?
+\end{itemize}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{c+c1}{\PYZsh{} Fit the training data to the model using grid search}
+         \PY{n}{reg} \PY{o}{=} \PY{n}{fit\PYZus{}model}\PY{p}{(}\PY{n}{X\PYZus{}train}\PY{p}{,} \PY{n}{y\PYZus{}train}\PY{p}{)}
+         
+         \PY{c+c1}{\PYZsh{} Produce the value for \PYZsq{}max\PYZus{}depth\PYZsq{}}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Parameter }\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{max\PYZus{}depth}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{ is }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{ for the optimal model.}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{reg}\PY{o}{.}\PY{n}{get\PYZus{}params}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}depth}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Parameter 'max\_depth' is 4 for the optimal model.
+
+    \end{Verbatim}
+
+    **Answer: * The optimal max\_depth is 4 and it is exactly the same as in
+Question 6
+
+    \subsubsection{Predicting Selling
+Prices}\label{predicting-selling-prices}
+
+Imagine that you were a real estate agent in the Boston area looking to
+use this model to help price homes owned by your clients that they wish
+to sell. You have collected the following information from three of your
+clients:
+
+\begin{longtable}[]{@{}cccc@{}}
+\toprule
+Feature & Client 1 & Client 2 & Client 3\tabularnewline
+\midrule
+\endhead
+Total number of rooms in home & 5 rooms & 4 rooms & 8
+rooms\tabularnewline
+Neighborhood poverty level (as \%) & 17\% & 32\% & 3\%\tabularnewline
+Student-teacher ratio of nearby schools & 15-to-1 & 22-to-1 &
+12-to-1\tabularnewline
+\bottomrule
+\end{longtable}
+
+\begin{itemize}
+\tightlist
+\item
+  What price would you recommend each client sell his/her home at?
+\item
+  Do these prices seem reasonable given the values for the respective
+  features?
+\end{itemize}
+
+\textbf{Hint:} We will use the statistics calculated in the \textbf{Data
+Exploration} section to help justify our response. Of the three clients,
+client 3 has has the biggest house, in the best public school
+neighborhood with the lowest poverty level; while client 2 has the
+smallest house, in a neighborhood with a relatively high poverty rate
+and not the best public schools.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{c+c1}{\PYZsh{} Produce a matrix for client data}
+         \PY{n}{client\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{17}\PY{p}{,} \PY{l+m+mi}{15}\PY{p}{]}\PY{p}{,} \PY{c+c1}{\PYZsh{} Client 1}
+                        \PY{p}{[}\PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{32}\PY{p}{,} \PY{l+m+mi}{22}\PY{p}{]}\PY{p}{,} \PY{c+c1}{\PYZsh{} Client 2}
+                        \PY{p}{[}\PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{]}\PY{p}{]}  \PY{c+c1}{\PYZsh{} Client 3}
+         
+         \PY{c+c1}{\PYZsh{} Show predictions}
+         \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{price} \PY{o+ow}{in} \PY{n+nb}{enumerate}\PY{p}{(}\PY{n}{reg}\PY{o}{.}\PY{n}{predict}\PY{p}{(}\PY{n}{client\PYZus{}data}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Predicted selling price for Client }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{s home: \PYZdl{}}\PY{l+s+si}{\PYZob{}:,.2f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{price}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Predicted selling price for Client 1's home: \$403,025.00
+Predicted selling price for Client 2's home: \$237,478.72
+Predicted selling price for Client 3's home: \$931,636.36
+
+    \end{Verbatim}
+
+    \textbf{Answer: * } Predicted selling price for Client 1's home:
+\$403,025.00
+
+** Predicted selling price for Client 2's home: \$237,478.72
+
+** Predicted selling price for Client 3's home: \$931,636.36
+
+\begin{itemize}
+\tightlist
+\item
+  Yes these price seem reasonable, because as stated above, Client1's
+  home has 5 bedrooms and is in a reasonable neighbourhood and the
+  poverty percentage is not that high, also the schools in that
+  neighbourhood seem reasonable and hence the price of that house is in
+  the mid-ranges. Also Client 2's is the smallest of the homes, is in an
+  area of high poverty and the ratio of students to teachers is also
+  very high, all in all this house does not seem to be in a good
+  neighbourhood, it is small and hence it has the lowest price of all.
+  Client 3's home is the biggest of all has a very less population of
+  poor people around it and has good schools as seen from the student
+  teacher ratio and hence its high price is justifiable.
+\end{itemize}
+
+    \subsubsection{Sensitivity}\label{sensitivity}
+
+An optimal model is not necessarily a robust model. Sometimes, a model
+is either too complex or too simple to sufficiently generalize to new
+data. Sometimes, a model could use a learning algorithm that is not
+appropriate for the structure of the data given. Other times, the data
+itself could be too noisy or contain too few samples to allow a model to
+adequately capture the target variable --- i.e., the model is
+underfitted.
+
+\textbf{Run the code cell below to run the \texttt{fit\_model} function
+ten times with different training and testing sets to see how the
+prediction for a specific client changes with respect to the data it's
+trained on.}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{n}{vs}\PY{o}{.}\PY{n}{PredictTrials}\PY{p}{(}\PY{n}{features}\PY{p}{,} \PY{n}{prices}\PY{p}{,} \PY{n}{fit\PYZus{}model}\PY{p}{,} \PY{n}{client\PYZus{}data}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Trial 1: \$391,183.33
+Trial 2: \$419,700.00
+Trial 3: \$415,800.00
+Trial 4: \$420,622.22
+Trial 5: \$418,377.27
+Trial 6: \$411,931.58
+Trial 7: \$399,663.16
+Trial 8: \$407,232.00
+Trial 9: \$351,577.61
+Trial 10: \$413,700.00
+
+Range in prices: \$69,044.61
+
+    \end{Verbatim}
+
+    \subsubsection{Applicability}\label{applicability}
+
+    \begin{itemize}
+\tightlist
+\item
+  The data was collected in 1978. It is not reasonable to use a model
+  trained on a 40 year old data. This is because in 40 years there may
+  have been a lot of changes in lot of neighbourhoods. For example. a
+  bad neighbourhood may have become good through gentrification, and
+  vice versa. In such a circumstance this particular model would predict
+  wrong prices for the houses. We also have to take into consideration
+  the inflation, the house prices would have increased consistently in
+  40 years and hence such a model would seriously undervalue a client's
+  home if the prediction is made today.
+\item
+  The features are also limited. What is a person has a small house in a
+  very large area, what if the house is small but is extremly hitech. In
+  such circumstances the house of the price would be much higher that
+  the price predicted by the model.
+\item
+  The model also is not good enough to make consistent predictions which
+  is visible from the above codeblock. The reason being, the data is
+  insufficient and is not representative of the entire population data.
+\item
+  The data collected was in Boston. Now not all the cities have same
+  price of real estate. Metropolitans like Boston New york etc have a
+  very high price for small houses whereas the same house size may cost
+  substantially less in other smaller cities. Hence this model can be
+  used only on Boston and no-where else.
+\item
+  It is also not fair to judge the price of the house on the basis of
+  the neighbourhood. It may happen sometimes that a very good house is
+  built in a bad neighbourhood and vice-versa. Under such circumstances
+  the model may make some serious mistakes in valuing the prize of the
+  house.
+\end{itemize}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}
