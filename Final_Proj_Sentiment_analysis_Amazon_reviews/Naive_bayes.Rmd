@@ -1,0 +1,1235 @@
+---
+title: "Naive_bayes_test4"
+author: "Ruchin"
+date: "4/23/2017"
+output:
+  pdf_document: default
+  word_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+****************************************************************************************************************************************
+
+```{r cars,include=FALSE}
+library(RTextTools)
+library(e1071)
+library(latticeExtra)
+library("plot3D")
+
+dir <- "/Users/ruchinpatel/Desktop/USC_sem_1/EE 503 Probability/Project/amazon_book_reviews"   # my laptop
+setwd(dir)
+getwd()
+
+#take in data for the Martian dataset
+data.total.martian <- read.csv("Andy-Weir-The-Martian.csv", as.is=TRUE) # Original one 
+colnames(data.total.martian) <- c("stars","tail_of_review_url","review_title","review_text")
+data.total.martian[,4] <- gsub("<span class=\"a-size-base review-text\">","",data.total.martian[,4])
+data.total.martian[,4] <- gsub("</span>","",data.total.martian[,4])
+
+#take in data for The goldFinch dataset
+data.total.goldfinch <- read.csv("Donna-Tartt-The-Goldfinch.csv", as.is=TRUE) # Original one 
+colnames(data.total.goldfinch) <- c("stars","tail_of_review_url","review_title","review_text")
+data.total.goldfinch[,4] <- gsub("<span class=\"a-size-base review-text\">","",data.total.goldfinch[,4])
+data.total.goldfinch[,4] <- gsub("</span>","",data.total.goldfinch[,4])
+
+#take in data for Fifty Shades of Grey
+data.total.fifty <- read.csv("EL-James-Fifty-Shades-of-Grey.csv", as.is=TRUE) # Original one 
+colnames(data.total.fifty) <- c("stars","tail_of_review_url","review_title","review_text")
+data.total.fifty[,4] <- gsub("<span class=\"a-size-base review-text\">","",data.total.fifty[,4])
+data.total.fifty[,4] <- gsub("</span>","",data.total.fifty[,4])
+
+#Take in data for GoneGirl
+data.total.gone <- read.csv("Fillian_Flynn-Gone_Girl.csv", as.is=TRUE) # Original one 
+colnames(data.total.gone) <- c("stars","tail_of_review_url","review_title","review_text")
+data.total.gone[,4] <- gsub("<span class=\"a-size-base review-text\">","",data.total.gone[,4])
+data.total.gone[,4] <- gsub("</span>","",data.total.gone[,4])
+
+#Take in data for FAULT IN STARS
+data.total.stars <- read.csv("John-Green-The-Fault-in-our-Stars.csv", as.is=TRUE) # Original one 
+colnames(data.total.stars) <- c("stars","tail_of_review_url","review_title","review_text")
+data.total.stars[,4] <- gsub("<span class=\"a-size-base review-text\">","",data.total.stars[,4])
+data.total.stars[,4] <- gsub("</span>","",data.total.stars[,4])
+
+#Take in data for UNBROKEN
+data.total.unbroken <- read.csv("Laura-Hillenbrand-Unbroken.csv", as.is=TRUE) # Original one 
+colnames(data.total.unbroken) <- c("stars","tail_of_review_url","review_title","review_text")
+data.total.unbroken[,4] <- gsub("<span class=\"a-size-base review-text\">","",data.total.unbroken[,4])
+data.total.unbroken[,4] <- gsub("</span>","",data.total.unbroken[,4])
+
+#Take in data for THE GIRL ON THE TRAIN
+data.total.the_girl_on_the_train <- read.csv("Paula_Hawkins-The-Girl-On-The-Train.csv", as.is=TRUE) # Original one 
+colnames(data.total.the_girl_on_the_train) <- c("stars","tail_of_review_url","review_title","review_text")
+data.total.the_girl_on_the_train[,4] <- gsub("<span class=\"a-size-base review-text\">","",data.total.the_girl_on_the_train[,4])
+data.total.the_girl_on_the_train[,4] <- gsub("</span>","",data.total.the_girl_on_the_train[,4])
+
+#Take in data for THE HUNGER GAMES
+data.total.hunger <- read.csv("Suzanne-Collins-The-Hunger-Games.csv", as.is=TRUE) # Original one 
+colnames(data.total.hunger) <- c("stars","tail_of_review_url","review_title","review_text")
+data.total.hunger[,4] <- gsub("<span class=\"a-size-base review-text\">","",data.total.hunger[,4])
+data.total.hunger[,4] <- gsub("</span>","",data.total.hunger[,4])
+
+
+
+num_tests_martian = matrix(c(2500,5000,10000,11000,15000))
+accuracy_martian = matrix(c(0,0,0,0,0))
+
+num_tests_goldfinch = matrix(c(2500,5000,10000,15000,16000))
+accuracy_goldfinch = matrix(c(0,0,0,0,0))
+
+num_tests_fifty = matrix(c(2500,5000,10000,12000,15000))
+accuracy_fifty = matrix(c(0,0,0,0,0))
+
+num_tests_gone = matrix(c(2500,5000,10000,15000,16000))
+accuracy_gone = matrix(c(0,0,0,0,0))
+
+num_tests_stars = matrix(c(2500,5000,10000,15000,16000))
+accuracy_stars = matrix(c(0,0,0,0,0))
+
+num_tests_unbroken = matrix(c(2500,5000,10000,15000,16000))
+accuracy_unbroken = matrix(c(0,0,0,0,0))
+
+num_tests_the_girl_on_the_train = matrix(c(2500,5000,10000,15000,16000))
+accuracy_the_girl_on_the_train = matrix(c(0,0,0,0,0))
+
+num_tests_hunger = matrix(c(2500,5000,10000,12000,15000))
+accuracy_hunger = matrix(c(0,0,0,0,0))
+
+
+#names(data.total.martian); object.size(data.total.martian) # about 92mb
+
+#getting data for 1 2 3 4 and 5 stars for all the books
+
+#MARTIAN
+data_stars_martian = data.total.martian[,1]
+data_stars_martian = as.matrix(data_stars_martian)
+data_star1_martian = as.matrix(data_stars_martian[data_stars_martian[,1]==1])
+data_star2_martian = as.matrix(data_stars_martian[data_stars_martian[,1]==2])
+data_star3_martian = as.matrix(data_stars_martian[data_stars_martian[,1]==3])
+data_star4_martian = as.matrix(data_stars_martian[data_stars_martian[,1]==4])
+data_star5_martian = as.matrix(data_stars_martian[data_stars_martian[,1]==5])
+
+star_matrix_martian <- matrix(c(1,dim(data_star1_martian)[1],2,dim(data_star2_martian)[1],3,dim(data_star3_martian)[1],4,dim(data_star4_martian)[1],5,dim(data_star5_martian)[1]),ncol=2,byrow=TRUE)
+colnames(star_matrix_martian) <- c("stars","total_reviews")
+rownames(star_matrix_martian) <- c("1_star","2_star","3_star","4_star","5_star")
+
+#GOLDFINCH
+data_stars_goldfinch = data.total.goldfinch[,1]
+data_stars_goldfinch = as.matrix(data_stars_goldfinch)
+data_star1_goldfinch = as.matrix(data_stars_goldfinch[data_stars_goldfinch[,1]==1])
+data_star2_goldfinch = as.matrix(data_stars_goldfinch[data_stars_goldfinch[,1]==2])
+data_star3_goldfinch = as.matrix(data_stars_goldfinch[data_stars_goldfinch[,1]==3])
+data_star4_goldfinch = as.matrix(data_stars_goldfinch[data_stars_goldfinch[,1]==4])
+data_star5_goldfinch = as.matrix(data_stars_goldfinch[data_stars_goldfinch[,1]==5])
+
+star_matrix_goldfinch <- matrix(c(1,dim(data_star1_goldfinch)[1],2,dim(data_star2_goldfinch)[1],3,dim(data_star3_goldfinch)[1],4,dim(data_star4_goldfinch)[1],5,dim(data_star5_goldfinch)[1]),ncol=2,byrow=TRUE)
+colnames(star_matrix_goldfinch) <- c("stars","total_reviews")
+rownames(star_matrix_goldfinch) <- c("1_star","2_star","3_star","4_star","5_star")
+
+#FIFTY SHADES OF GREY
+data_stars_fifty = data.total.fifty[,1]
+data_stars_fifty = as.matrix(data_stars_fifty)
+data_star1_fifty = as.matrix(data_stars_fifty[data_stars_fifty[,1]==1])
+data_star2_fifty = as.matrix(data_stars_fifty[data_stars_fifty[,1]==2])
+data_star3_fifty = as.matrix(data_stars_fifty[data_stars_fifty[,1]==3])
+data_star4_fifty = as.matrix(data_stars_fifty[data_stars_fifty[,1]==4])
+data_star5_fifty = as.matrix(data_stars_fifty[data_stars_fifty[,1]==5])
+
+star_matrix_fifty <- matrix(c(1,dim(data_star1_fifty)[1],2,dim(data_star2_fifty)[1],3,dim(data_star3_fifty)[1],4,dim(data_star4_fifty)[1],5,dim(data_star5_fifty)[1]),ncol=2,byrow=TRUE)
+colnames(star_matrix_fifty) <- c("stars","total_reviews")
+rownames(star_matrix_fifty) <- c("1_star","2_star","3_star","4_star","5_star")
+
+#GONE GIRL
+data_stars_gone = data.total.gone[,1]
+data_stars_gone = as.matrix(data_stars_gone)
+data_star1_gone = as.matrix(data_stars_gone[data_stars_gone[,1]==1])
+data_star2_gone = as.matrix(data_stars_gone[data_stars_gone[,1]==2])
+data_star3_gone = as.matrix(data_stars_gone[data_stars_gone[,1]==3])
+data_star4_gone = as.matrix(data_stars_gone[data_stars_gone[,1]==4])
+data_star5_gone = as.matrix(data_stars_gone[data_stars_gone[,1]==5])
+
+star_matrix_gone <- matrix(c(1,dim(data_star1_gone)[1],2,dim(data_star2_gone)[1],3,dim(data_star3_gone)[1],4,dim(data_star4_gone)[1],5,dim(data_star5_gone)[1]),ncol=2,byrow=TRUE)
+colnames(star_matrix_gone) <- c("stars","total_reviews")
+rownames(star_matrix_gone) <- c("1_star","2_star","3_star","4_star","5_star")
+
+#FAULT IN OUR STARS
+data_stars_stars = data.total.stars[,1]
+data_stars_stars = as.matrix(data_stars_stars)
+data_star1_stars = as.matrix(data_stars_stars[data_stars_stars[,1]==1])
+data_star2_stars = as.matrix(data_stars_stars[data_stars_stars[,1]==2])
+data_star3_stars = as.matrix(data_stars_stars[data_stars_stars[,1]==3])
+data_star4_stars = as.matrix(data_stars_stars[data_stars_stars[,1]==4])
+data_star5_stars = as.matrix(data_stars_stars[data_stars_stars[,1]==5])
+
+star_matrix_stars <- matrix(c(1,dim(data_star1_stars)[1],2,dim(data_star2_stars)[1],3,dim(data_star3_stars)[1],4,dim(data_star4_stars)[1],5,dim(data_star5_stars)[1]),ncol=2,byrow=TRUE)
+colnames(star_matrix_stars) <- c("stars","total_reviews")
+rownames(star_matrix_stars) <- c("1_star","2_star","3_star","4_star","5_star")
+
+#UNBROKEN
+data_stars_unbroken = data.total.unbroken[,1]
+data_stars_unbroken = as.matrix(data_stars_unbroken)
+data_star1_unbroken = as.matrix(data_stars_unbroken[data_stars_unbroken[,1]==1])
+data_star2_unbroken = as.matrix(data_stars_unbroken[data_stars_unbroken[,1]==2])
+data_star3_unbroken = as.matrix(data_stars_unbroken[data_stars_unbroken[,1]==3])
+data_star4_unbroken = as.matrix(data_stars_unbroken[data_stars_unbroken[,1]==4])
+data_star5_unbroken = as.matrix(data_stars_unbroken[data_stars_unbroken[,1]==5])
+
+star_matrix_unbroken <- matrix(c(1,dim(data_star1_unbroken)[1],2,dim(data_star2_unbroken)[1],3,dim(data_star3_unbroken)[1],4,dim(data_star4_unbroken)[1],5,dim(data_star5_unbroken)[1]),ncol=2,byrow=TRUE)
+colnames(star_matrix_unbroken) <- c("stars","total_reviews")
+rownames(star_matrix_unbroken) <- c("1_star","2_star","3_star","4_star","5_star")
+
+
+#the_girl_on_the_train
+data_stars_the_girl_on_the_train = data.total.the_girl_on_the_train[,1]
+data_stars_the_girl_on_the_train = as.matrix(data_stars_the_girl_on_the_train)
+data_star1_the_girl_on_the_train = as.matrix(data_stars_the_girl_on_the_train[data_stars_the_girl_on_the_train[,1]==1])
+data_star2_the_girl_on_the_train = as.matrix(data_stars_the_girl_on_the_train[data_stars_the_girl_on_the_train[,1]==2])
+data_star3_the_girl_on_the_train = as.matrix(data_stars_the_girl_on_the_train[data_stars_the_girl_on_the_train[,1]==3])
+data_star4_the_girl_on_the_train = as.matrix(data_stars_the_girl_on_the_train[data_stars_the_girl_on_the_train[,1]==4])
+data_star5_the_girl_on_the_train = as.matrix(data_stars_the_girl_on_the_train[data_stars_the_girl_on_the_train[,1]==5])
+
+star_matrix_the_girl_on_the_train <- matrix(c(1,dim(data_star1_the_girl_on_the_train)[1],2,dim(data_star2_the_girl_on_the_train)[1],3,dim(data_star3_the_girl_on_the_train)[1],4,dim(data_star4_the_girl_on_the_train)[1],5,dim(data_star5_the_girl_on_the_train)[1]),ncol=2,byrow=TRUE)
+colnames(star_matrix_the_girl_on_the_train) <- c("stars","total_reviews")
+rownames(star_matrix_the_girl_on_the_train) <- c("1_star","2_star","3_star","4_star","5_star")
+
+#hunger
+data_stars_hunger = data.total.hunger[,1]
+data_stars_hunger = as.matrix(data_stars_hunger)
+data_star1_hunger = as.matrix(data_stars_hunger[data_stars_hunger[,1]==1])
+data_star2_hunger = as.matrix(data_stars_hunger[data_stars_hunger[,1]==2])
+data_star3_hunger = as.matrix(data_stars_hunger[data_stars_hunger[,1]==3])
+data_star4_hunger = as.matrix(data_stars_hunger[data_stars_hunger[,1]==4])
+data_star5_hunger = as.matrix(data_stars_hunger[data_stars_hunger[,1]==5])
+
+star_matrix_hunger <- matrix(c(1,dim(data_star1_hunger)[1],2,dim(data_star2_hunger)[1],3,dim(data_star3_hunger)[1],4,dim(data_star4_hunger)[1],5,dim(data_star5_hunger)[1]),ncol=2,byrow=TRUE)
+colnames(star_matrix_hunger) <- c("stars","total_reviews")
+rownames(star_matrix_hunger) <- c("1_star","2_star","3_star","4_star","5_star")
+
+```
+
+I am just Writing the gist so that it becomes easy for you to write the report:
+
+So basically what I have done in this code is as follows:
+
+1.) Initially we have take reviews of 8 book bought from amazon. The average reviews per book is almost 20000.
+2.) The ratings are given in 1 to 5 stars.
+3.) The 3d bar graph shows us hpw every ratings for each book is distrbuted.
+
+We are going to classify all the reviews of the book as good or bad,with the help of a Naive Bayes classifier. So first of all what we are supposed to do is to take a threshold for the original reviews. For this I have considered any review which is given a 4 or a 5 star as a good review. Anything other than that is considered to be a bad review. By taking this into consideration we got two classes for our reviews, i.e a good review and a bad review. 
+
+Now the itution behind our sentiment classification algorithm is that, practically whenever we read some review, our brain works in a specific manner, i.e it looks for certain words in the review, certain phrases that give us the sentiment behind the review. Say for example: This book is not satisfactory. When we read such a sentence our focus goesto the word not and we instantly make up our mind that the review writte for sucha a book is bad, finally deducing that it might be a bad book.
+
+In the same way we are going to use specific words from all the reviews and use it to train a model and use that model to predict whether a given review is a positive review or a negative review.
+
+For this we are going to use the Naive Bayes alorithm for Sentiment Analysis:
+
+Some insight one why this algorithm is called Naive:
+Generally when we talk of seniment analysis we have to consider a grammerused in the sentence.
+If we consider the occurance of the words and not the grammer the meaning of the sentece would be perceived entirely differently.
+ For example: These two sentences:
+ 
+ 1.)This book is not bad and not at all not readable.
+ 2.)This book is good.
+ 
+ The meaning of both the sentencees is same, however a Naive person would think that since the words not are repeated atleast 3 times in the sentence, the review for the book is bad. 
+ 
+ The Naive Bayes algorithm does the same thing. It does not consider the grammar of the sentence, istead it considers as if all the words in the sentence are independent of each other, in other words , all the permutation of the words in a sentence , essentially mean the same sentence. Its as if the sentence is a bag and words are placed haphazardly in it.
+ 
+ Since this algorithm considers such an assumption, it is called Naive "literally". However it works just fine practically(For the explanation of this refer the link I sent you.)
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+#draw ratings graph for all the books of them 
+plot1 = hist3D(z=star_matrix_martian,border = "black", xlab = "stars(1-5)",ylab = "The Martian",zlab= "ratings")
+plot2=hist3D(z=star_matrix_goldfinch,border = "black",xlab = "stars(1-5)",ylab = "The Goldfinch",zlab= "ratings")
+plot3=hist3D(z=star_matrix_fifty,border = "black",xlab = "stars(1-5)",ylab = "Fifty Shades",zlab= "ratings")
+plot4=hist3D(z=star_matrix_gone,border = "black",xlab = "stars(1-5)",ylab = "Gone Girl",zlab= "ratings")
+plot5=hist3D(z=star_matrix_stars,border = "black",xlab = "stars(1-5)",ylab = "Fault in our stars",zlab= "ratings")
+plot6=hist3D(z=star_matrix_unbroken,border = "black",xlab = "stars(1-5)",ylab = "UNBROKEN",zlab= "ratings")
+plot7=hist3D(z=star_matrix_the_girl_on_the_train,border = "black",xlab = "stars(1-5)",ylab = "The Girl On the Train",zlab= "ratings")
+plot8=hist3D(z=star_matrix_hunger,border = "black",xlab = "stars(1-5)",ylab = "Hunger Games",zlab= "ratings")
+
+```
+
+
+
+
+
+Also all the words in the sentence are not important. For example stop words like is , or , not etc, punctuations, numbers, special characters , etc do not give us any information about the review. Hence we remove all such things from the review and make a vocabulary of only the important words.
+
+
+
+
+
+
+
+
+
+
+```{r,echo=FALSE}
+# setting back a larger dataset.
+n_martian <- nrow(data.total.martian)
+n_goldfinch <- nrow(data.total.goldfinch)
+n_fifty <- nrow(data.total.fifty)
+n_gone <- nrow(data.total.gone)
+n_stars <- nrow(data.total.stars)
+n_unbroken <- nrow(data.total.unbroken)
+n_the_girl_on_the_train <- nrow(data.total.the_girl_on_the_train)
+n_hunger <- nrow(data.total.hunger)
+#levels(as.factor(data.total.martian$stars))
+
+
+# Set stars as a categorical variable. for all books Also group stars 1-3 as 0 and 4,5 as 1
+
+#MARTIAN
+data.total.martian$rating <- rep(0, n_martian)
+data.total.martian$rating[data.total.martian$stars >= 4] <- 1
+data.total.martian$rating <- as.factor(data.total.martian$rating)
+
+#GOLDFINCH
+data.total.goldfinch$rating <- rep(0, n_goldfinch)
+data.total.goldfinch$rating[data.total.goldfinch$stars >= 4] <- 1
+data.total.goldfinch$rating <- as.factor(data.total.goldfinch$rating)
+
+#FIFTY SHADES OF GREY
+data.total.fifty$rating <- rep(0, n_fifty)
+data.total.fifty$rating[data.total.fifty$stars >= 4] <- 1
+data.total.fifty$rating <- as.factor(data.total.fifty$rating)
+
+#GONE GIRL
+data.total.gone$rating <- rep(0, n_gone)
+data.total.gone$rating[data.total.gone$stars >= 4] <- 1
+data.total.gone$rating <- as.factor(data.total.gone$rating)
+
+#THE FAULT IN OUR STARS
+data.total.stars$rating <- rep(0, n_stars)
+data.total.stars$rating[data.total.stars$stars >= 4] <- 1
+data.total.stars$rating <- as.factor(data.total.stars$rating)
+
+#UNBROKEN
+data.total.unbroken$rating <- rep(0, n_unbroken)
+data.total.unbroken$rating[data.total.unbroken$stars >= 4] <- 1
+data.total.unbroken$rating <- as.factor(data.total.unbroken$rating)
+
+#the_girl_on_the_train
+data.total.the_girl_on_the_train$rating <- rep(0, n_the_girl_on_the_train)
+data.total.the_girl_on_the_train$rating[data.total.the_girl_on_the_train$stars >= 4] <- 1
+data.total.the_girl_on_the_train$rating <- as.factor(data.total.the_girl_on_the_train$rating)
+
+#HUNGER GAMES
+data.total.hunger$rating <- rep(0, n_hunger)
+data.total.hunger$rating[data.total.hunger$stars >= 4] <- 1
+data.total.hunger$rating <- as.factor(data.total.hunger$rating)
+
+
+# Proportion of good ratings
+#table(data.total.martian$rating)  # looks like a lot more "1"
+
+data.all.martian = data.total.martian   
+data.all.goldfinch = data.total.goldfinch
+data.all.fifty = data.total.fifty
+data.all.gone = data.total.gone
+data.all.stars = data.total.stars
+data.all.unbroken = data.total.unbroken
+data.all.the_girl_on_the_train = data.total.the_girl_on_the_train
+data.all.hunger = data.total.hunger
+
+#create a matrix of all texts to clean it of useless stuff
+data.text.martian <- data.all.martian$review_text   # take the text out
+data.text.goldfinch <- data.all.goldfinch$review_text 
+data.text.fifty <- data.all.fifty$review_text 
+data.text.gone <- data.all.gone$review_text 
+data.text.stars <- data.all.stars$review_text 
+data.text.unbroken <- data.all.unbroken$review_text 
+data.text.the_girl_on_the_train <- data.all.the_girl_on_the_train$review_text 
+data.text.hunger <- data.all.hunger$review_text 
+
+# Number of the words could be a good predictor. Will investigate it later.
+
+library(tm)
+
+#MARTIAN
+# 1. Make corpus which is collection of texts
+# VCorpus (Volatile Corpus) #brings the words to the level which  computer can read
+mycorpus_martian <- VCorpus( VectorSource(data.text.martian))
+
+# 2, Change to lower case
+mycorpus2_martian <- tm_map(mycorpus_martian, content_transformer(tolower))
+
+# 3, Remove some non-content words
+
+mycorpus3_martian<- tm_map(mycorpus2_martian, removeWords, stopwords("english"))
+
+# 4, Remove punctuations
+mycorpus4_martian <- tm_map(mycorpus3_martian, removePunctuation)
+
+# 5, Remove numbers
+mycorpus5_martian <- tm_map(mycorpus4_martian, removeNumbers)
+
+# 6, Stem words
+mycorpus6_martian <- tm_map(mycorpus5_martian, stemDocument, lazy = TRUE)   
+
+# 7, Ready to get word frequency matrix
+dtm_martian <- DocumentTermMatrix( mycorpus6_martian )
+#dtm_martian
+
+#GOLDFINCH
+# 1. Make corpus which is collection of texts
+# VCorpus (Volatile Corpus) #brings the words to the level which  computer can read
+mycorpus_goldfinch <- VCorpus( VectorSource(data.text.goldfinch))
+
+# 2, Change to lower case
+mycorpus2_goldfinch <- tm_map(mycorpus_goldfinch, content_transformer(tolower))
+
+# 3, Remove some non-content words
+
+mycorpus3_goldfinch<- tm_map(mycorpus2_goldfinch, removeWords, stopwords("english"))
+
+# 4, Remove punctuations
+mycorpus4_goldfinch <- tm_map(mycorpus3_goldfinch, removePunctuation)
+
+# 5, Remove numbers
+mycorpus5_goldfinch <- tm_map(mycorpus4_goldfinch, removeNumbers)
+
+# 6, Stem words
+mycorpus6_goldfinch <- tm_map(mycorpus5_goldfinch, stemDocument, lazy = TRUE)   
+
+# 7, Ready to get word frequency matrix
+dtm_goldfinch <- DocumentTermMatrix( mycorpus6_goldfinch )
+#dtm_goldfinch
+
+#FIFTY SHADES OF GREY
+# 1. Make corpus which is collection of texts
+# VCorpus (Volatile Corpus) #brings the words to the level which  computer can read
+mycorpus_fifty <- VCorpus( VectorSource(data.text.fifty))
+
+# 2, Change to lower case
+mycorpus2_fifty <- tm_map(mycorpus_fifty, content_transformer(tolower))
+
+# 3, Remove some non-content words
+
+mycorpus3_fifty<- tm_map(mycorpus2_fifty, removeWords, stopwords("english"))
+
+# 4, Remove punctuations
+mycorpus4_fifty <- tm_map(mycorpus3_fifty, removePunctuation)
+
+# 5, Remove numbers
+mycorpus5_fifty <- tm_map(mycorpus4_fifty, removeNumbers)
+
+# 6, Stem words
+mycorpus6_fifty <- tm_map(mycorpus5_fifty, stemDocument, lazy = TRUE)   
+
+# 7, Ready to get word frequency matrix
+dtm_fifty <- DocumentTermMatrix( mycorpus6_fifty )
+#dtm_fifty
+
+
+#GONE GIRL
+# 1. Make corpus which is collection of texts
+# VCorpus (Volatile Corpus) #brings the words to the level which  computer can read
+mycorpus_gone <- VCorpus( VectorSource(data.text.gone))
+
+# 2, Change to lower case
+mycorpus2_gone <- tm_map(mycorpus_gone, content_transformer(tolower))
+
+# 3, Remove some non-content words
+
+mycorpus3_gone<- tm_map(mycorpus2_gone, removeWords, stopwords("english"))
+
+# 4, Remove punctuations
+mycorpus4_gone <- tm_map(mycorpus3_gone, removePunctuation)
+
+# 5, Remove numbers
+mycorpus5_gone <- tm_map(mycorpus4_gone, removeNumbers)
+
+# 6, Stem words
+mycorpus6_gone <- tm_map(mycorpus5_gone, stemDocument, lazy = TRUE)   
+
+# 7, Ready to get word frequency matrix
+dtm_gone <- DocumentTermMatrix( mycorpus6_gone )
+#dtm_gone
+
+
+#THE FAULT IN OUR STARS
+# 1. Make corpus which is collection of texts
+# VCorpus (Volatile Corpus) #brings the words to the level which  computer can read
+mycorpus_stars <- VCorpus( VectorSource(data.text.stars))
+
+# 2, Change to lower case
+mycorpus2_stars <- tm_map(mycorpus_stars, content_transformer(tolower))
+
+# 3, Remove some non-content words
+
+mycorpus3_stars<- tm_map(mycorpus2_stars, removeWords, stopwords("english"))
+
+# 4, Remove punctuations
+mycorpus4_stars <- tm_map(mycorpus3_stars, removePunctuation)
+
+# 5, Remove numbers
+mycorpus5_stars <- tm_map(mycorpus4_stars, removeNumbers)
+
+# 6, Stem words
+mycorpus6_stars <- tm_map(mycorpus5_stars, stemDocument, lazy = TRUE)   
+
+# 7, Ready to get word frequency matrix
+dtm_stars <- DocumentTermMatrix( mycorpus6_stars )
+#dtm_stars
+
+
+#UNBROKEN
+# 1. Make corpus which is collection of texts
+# VCorpus (Volatile Corpus) #brings the words to the level which  computer can read
+mycorpus_unbroken <- VCorpus( VectorSource(data.text.unbroken))
+
+# 2, Change to lower case
+mycorpus2_unbroken <- tm_map(mycorpus_unbroken, content_transformer(tolower))
+
+# 3, Remove some non-content words
+
+mycorpus3_unbroken<- tm_map(mycorpus2_unbroken, removeWords, stopwords("english"))
+
+# 4, Remove punctuations
+mycorpus4_unbroken <- tm_map(mycorpus3_unbroken, removePunctuation)
+
+# 5, Remove numbers
+mycorpus5_unbroken <- tm_map(mycorpus4_unbroken, removeNumbers)
+
+# 6, Stem words
+mycorpus6_unbroken <- tm_map(mycorpus5_unbroken, stemDocument, lazy = TRUE)   
+
+# 7, Ready to get word frequency matrix
+dtm_unbroken <- DocumentTermMatrix( mycorpus6_unbroken )
+#dtm_unbroken
+
+
+#the_girl_on_the_train
+# 1. Make corpus which is collection of texts
+# VCorpus (Volatile Corpus) #brings the words to the level which  computer can read
+mycorpus_the_girl_on_the_train <- VCorpus( VectorSource(data.text.the_girl_on_the_train))
+
+# 2, Change to lower case
+mycorpus2_the_girl_on_the_train <- tm_map(mycorpus_the_girl_on_the_train, content_transformer(tolower))
+
+# 3, Remove some non-content words
+
+mycorpus3_the_girl_on_the_train<- tm_map(mycorpus2_the_girl_on_the_train, removeWords, stopwords("english"))
+
+# 4, Remove punctuations
+mycorpus4_the_girl_on_the_train <- tm_map(mycorpus3_the_girl_on_the_train, removePunctuation)
+
+# 5, Remove numbers
+mycorpus5_the_girl_on_the_train <- tm_map(mycorpus4_the_girl_on_the_train, removeNumbers)
+
+# 6, Stem words
+mycorpus6_the_girl_on_the_train <- tm_map(mycorpus5_the_girl_on_the_train, stemDocument, lazy = TRUE)   
+
+# 7, Ready to get word frequency matrix
+dtm_the_girl_on_the_train <- DocumentTermMatrix( mycorpus6_the_girl_on_the_train )
+#dtm_the_girl_on_the_train
+
+#hunger
+# 1. Make corpus which is collection of texts
+# VCorpus (Volatile Corpus) #brings the words to the level which  computer can read
+mycorpus_hunger <- VCorpus( VectorSource(data.text.hunger))
+
+# 2, Change to lower case
+mycorpus2_hunger <- tm_map(mycorpus_hunger, content_transformer(tolower))
+
+# 3, Remove some non-content words
+
+mycorpus3_hunger<- tm_map(mycorpus2_hunger, removeWords, stopwords("english"))
+
+# 4, Remove punctuations
+mycorpus4_hunger <- tm_map(mycorpus3_hunger, removePunctuation)
+
+# 5, Remove numbers
+mycorpus5_hunger <- tm_map(mycorpus4_hunger, removeNumbers)
+
+# 6, Stem words
+mycorpus6_hunger <- tm_map(mycorpus5_hunger, stemDocument, lazy = TRUE)   
+
+# 7, Ready to get word frequency matrix
+dtm_hunger <- DocumentTermMatrix( mycorpus6_hunger )
+#dtm_hunger
+
+
+
+# Cut the bag to only include the words appearing at least 1% of the time
+
+#MARTIAN
+threshold_martian <- .01*length(mycorpus6_martian)   # 1% of the total documents 
+words.10_martian <- findFreqTerms(dtm_martian, lowfreq=threshold_martian)  # words appearing at least among 1% of the documents
+dtm10_martian<- DocumentTermMatrix(mycorpus6_martian, control=list(dictionary = words.10_martian))  
+
+#GOLDFINCH
+threshold_goldfinch <- .01*length(mycorpus6_goldfinch)   # 1% of the total documents 
+words.10_goldfinch <- findFreqTerms(dtm_goldfinch, lowfreq=threshold_goldfinch)  # words appearing at least among 1% of the documents
+dtm10_goldfinch <- DocumentTermMatrix(mycorpus6_goldfinch, control=list(dictionary = words.10_goldfinch))  
+
+#FIFTY SHADES OF GREY
+threshold_fifty <- .01*length(mycorpus6_fifty)   # 1% of the total documents 
+words.10_fifty <- findFreqTerms(dtm_fifty, lowfreq=threshold_fifty)  # words appearing at least among 1% of the documents
+dtm10_fifty <- DocumentTermMatrix(mycorpus6_fifty, control=list(dictionary = words.10_fifty))  
+
+#GONE GIRL
+threshold_gone <- .01*length(mycorpus6_gone)   # 1% of the total documents 
+words.10_gone <- findFreqTerms(dtm_gone, lowfreq=threshold_gone)  # words appearing at least among 1% of the documents
+dtm10_gone <- DocumentTermMatrix(mycorpus6_gone, control=list(dictionary = words.10_gone))  
+
+#THE FAULT IN OUR STARS
+threshold_stars <- .01*length(mycorpus6_stars)   # 1% of the total documents 
+words.10_stars <- findFreqTerms(dtm_stars, lowfreq=threshold_stars)  # words appearing at least among 1% of the documents
+dtm10_stars <- DocumentTermMatrix(mycorpus6_stars, control=list(dictionary = words.10_stars))  
+
+#UNBROKEN
+threshold_unbroken <- .01*length(mycorpus6_unbroken)   # 1% of the total documents 
+words.10_unbroken <- findFreqTerms(dtm_unbroken, lowfreq=threshold_unbroken)  # words appearing at least among 1% of the documents
+dtm10_unbroken <- DocumentTermMatrix(mycorpus6_unbroken, control=list(dictionary = words.10_unbroken))  
+
+#the_girl_on_the_train
+threshold_the_girl_on_the_train <- .01*length(mycorpus6_the_girl_on_the_train)   # 1% of the total documents 
+words.10_the_girl_on_the_train <- findFreqTerms(dtm_the_girl_on_the_train, lowfreq=threshold_the_girl_on_the_train)  # words appearing at least among 1% of the documents
+dtm10_the_girl_on_the_train <- DocumentTermMatrix(mycorpus6_the_girl_on_the_train, control=list(dictionary = words.10_the_girl_on_the_train))  
+
+#HUNGER GAMES
+threshold_hunger <- .01*length(mycorpus6_hunger)   # 1% of the total documents 
+words.10_hunger <- findFreqTerms(dtm_hunger, lowfreq=threshold_hunger)  # words appearing at least among 1% of the documents
+dtm10_hunger <- DocumentTermMatrix(mycorpus6_hunger, control=list(dictionary = words.10_hunger))  
+
+
+#predict accuracy for random number of documents
+
+#MARTIAN
+matrix_term_freq_martian = as.matrix(dtm10_martian)
+count = 1
+for(i in num_tests_martian){
+  print(count)
+  size = dim(matrix_term_freq_martian[1:num_tests_martian[count],]) #change here
+  matrix_term_train = matrix_term_freq_martian[1:(size[1]*0.8),]
+  data_train = data.all.martian[1:(size[1]*0.8),]
+  dim(data_train)
+  dim(matrix_term_train)
+  matrix_term_test = matrix_term_freq_martian[((size[1]*0.8)+1):size[1],]
+  data_test = data.all.martian[((size[1]*0.8)+1):size[1],]
+  dim(data_test)
+  dim(matrix_term_test)
+  
+  # train the model
+  #mat_train = as.matrix()
+  classifier = naiveBayes(matrix_term_train, data_train[,5])
+  
+  
+  # test the validity
+  predicted = predict(classifier, matrix_term_test); 
+  #predicted
+  table(data_test[,5], predicted)
+  accuracy_martian[count] <- recall_accuracy(data_test[,5], predicted)
+  count=count+1
+}
+
+#GOLDFINCH
+matrix_term_freq_goldfinch = as.matrix(dtm10_goldfinch)
+count = 1
+for(i in num_tests_goldfinch){
+  print(count)
+  size = dim(matrix_term_freq_goldfinch[1:num_tests_goldfinch[count],]) #change here
+  matrix_term_train = matrix_term_freq_goldfinch[1:(size[1]*0.8),]
+  data_train = data.all.martian[1:(size[1]*0.8),]
+  dim(data_train)
+  dim(matrix_term_train)
+  matrix_term_test = matrix_term_freq_goldfinch[((size[1]*0.8)+1):size[1],]
+  data_test = data.all.martian[((size[1]*0.8)+1):size[1],]
+  dim(data_test)
+  dim(matrix_term_test)
+  
+  # train the model
+  #mat_train = as.matrix()
+  classifier = naiveBayes(matrix_term_train, data_train[,5])
+  
+  
+  # test the validity
+  predicted = predict(classifier, matrix_term_test); 
+  #predicted
+  table(data_test[,5], predicted)
+  accuracy_goldfinch[count] <- recall_accuracy(data_test[,5], predicted)
+  count=count+1
+}
+
+#FIFTY SHADES OF GREY
+matrix_term_freq_fifty = as.matrix(dtm10_fifty)
+count = 1
+for(i in num_tests_fifty){
+  print(count)
+  size = dim(matrix_term_freq_fifty[1:num_tests_fifty[count],]) #change here
+  matrix_term_train = matrix_term_freq_fifty[1:(size[1]*0.8),]
+  data_train = data.all.martian[1:(size[1]*0.8),]
+  dim(data_train)
+  dim(matrix_term_train)
+  matrix_term_test = matrix_term_freq_fifty[((size[1]*0.8)+1):size[1],]
+  data_test = data.all.martian[((size[1]*0.8)+1):size[1],]
+  dim(data_test)
+  dim(matrix_term_test)
+  
+  # train the model
+  #mat_train = as.matrix()
+  classifier = naiveBayes(matrix_term_train, data_train[,5])
+  
+  
+  # test the validity
+  predicted = predict(classifier, matrix_term_test); 
+  #predicted
+  table(data_test[,5], predicted)
+  accuracy_fifty[count] <- recall_accuracy(data_test[,5], predicted)
+  count=count+1
+}
+
+#GONE GIRL
+matrix_term_freq_gone = as.matrix(dtm10_gone)
+count = 1
+for(i in num_tests_gone){
+  print(count)
+  size = dim(matrix_term_freq_gone[1:num_tests_gone[count],]) #change here
+  matrix_term_train = matrix_term_freq_gone[1:(size[1]*0.8),]
+  data_train = data.all.martian[1:(size[1]*0.8),]
+  dim(data_train)
+  dim(matrix_term_train)
+  matrix_term_test = matrix_term_freq_gone[((size[1]*0.8)+1):size[1],]
+  data_test = data.all.martian[((size[1]*0.8)+1):size[1],]
+  dim(data_test)
+  dim(matrix_term_test)
+  
+  # train the model
+  #mat_train = as.matrix()
+  classifier = naiveBayes(matrix_term_train, data_train[,5])
+  
+  
+  # test the validity
+  predicted = predict(classifier, matrix_term_test); 
+  #predicted
+  table(data_test[,5], predicted)
+  accuracy_gone[count] <- recall_accuracy(data_test[,5], predicted)
+  count=count+1
+}
+
+#THE FAULT IN OUR STARS
+matrix_term_freq_stars = as.matrix(dtm10_stars)
+count = 1
+for(i in num_tests_stars){
+  print(count)
+  size = dim(matrix_term_freq_stars[1:num_tests_stars[count],]) #change here
+  matrix_term_train = matrix_term_freq_stars[1:(size[1]*0.8),]
+  data_train = data.all.martian[1:(size[1]*0.8),]
+  dim(data_train)
+  dim(matrix_term_train)
+  matrix_term_test = matrix_term_freq_stars[((size[1]*0.8)+1):size[1],]
+  data_test = data.all.martian[((size[1]*0.8)+1):size[1],]
+  dim(data_test)
+  dim(matrix_term_test)
+  
+  # train the model
+  #mat_train = as.matrix()
+  classifier = naiveBayes(matrix_term_train, data_train[,5])
+  
+  
+  # test the validity
+  predicted = predict(classifier, matrix_term_test); 
+  #predicted
+  table(data_test[,5], predicted)
+  accuracy_stars[count] <- recall_accuracy(data_test[,5], predicted)
+  count=count+1
+}
+
+#UNBROKEN
+matrix_term_freq_unbroken = as.matrix(dtm10_unbroken)
+count = 1
+for(i in num_tests_unbroken){
+  print(count)
+  size = dim(matrix_term_freq_unbroken[1:num_tests_unbroken[count],]) #change here
+  matrix_term_train = matrix_term_freq_unbroken[1:(size[1]*0.8),]
+  data_train = data.all.martian[1:(size[1]*0.8),]
+  dim(data_train)
+  dim(matrix_term_train)
+  matrix_term_test = matrix_term_freq_unbroken[((size[1]*0.8)+1):size[1],]
+  data_test = data.all.martian[((size[1]*0.8)+1):size[1],]
+  dim(data_test)
+  dim(matrix_term_test)
+  
+  # train the model
+  #mat_train = as.matrix()
+  classifier = naiveBayes(matrix_term_train, data_train[,5])
+  
+  
+  # test the validity
+  predicted = predict(classifier, matrix_term_test); 
+  #predicted
+  table(data_test[,5], predicted)
+  accuracy_unbroken[count] <- recall_accuracy(data_test[,5], predicted)
+  count=count+1
+}
+
+#the_girl_on_the_train
+matrix_term_freq_the_girl_on_the_train = as.matrix(dtm10_the_girl_on_the_train)
+count = 1
+for(i in num_tests_the_girl_on_the_train){
+  print(count)
+  size = dim(matrix_term_freq_the_girl_on_the_train[1:num_tests_the_girl_on_the_train[count],]) #change here
+  matrix_term_train = matrix_term_freq_the_girl_on_the_train[1:(size[1]*0.8),]
+  data_train = data.all.martian[1:(size[1]*0.8),]
+  dim(data_train)
+  dim(matrix_term_train)
+  matrix_term_test = matrix_term_freq_the_girl_on_the_train[((size[1]*0.8)+1):size[1],]
+  data_test = data.all.martian[((size[1]*0.8)+1):size[1],]
+  dim(data_test)
+  dim(matrix_term_test)
+  
+  # train the model
+  #mat_train = as.matrix()
+  classifier = naiveBayes(matrix_term_train, data_train[,5])
+  
+  
+  # test the validity
+  predicted = predict(classifier, matrix_term_test); 
+  #predicted
+  table(data_test[,5], predicted)
+  accuracy_the_girl_on_the_train[count] <- recall_accuracy(data_test[,5], predicted)
+  count=count+1
+}
+
+#hunger
+matrix_term_freq_hunger = as.matrix(dtm10_hunger)
+count = 1
+for(i in num_tests_hunger){
+  print(count)
+  size = dim(matrix_term_freq_hunger[1:num_tests_hunger[count],]) #change here
+  matrix_term_train = matrix_term_freq_hunger[1:(size[1]*0.8),]
+  data_train = data.all.martian[1:(size[1]*0.8),]
+  dim(data_train)
+  dim(matrix_term_train)
+  matrix_term_test = matrix_term_freq_hunger[((size[1]*0.8)+1):size[1],]
+  data_test = data.all.martian[((size[1]*0.8)+1):size[1],]
+  dim(data_test)
+  dim(matrix_term_test)
+  
+  # train the model
+  #mat_train = as.matrix()
+  classifier = naiveBayes(matrix_term_train, data_train[,5])
+  
+  
+  # test the validity
+  predicted = predict(classifier, matrix_term_test); 
+  #predicted
+  table(data_test[,5], predicted)
+  accuracy_hunger[count] <- recall_accuracy(data_test[,5], predicted)
+  count=count+1
+}
+
+```
+
+
+As we know our dataset is quite large. And as a result of this the total number of unique words in all of those documents are also very large. However some of the words occur less than 1% of the time in all of the reviews. As a result of this they do not contribute to classification process. Hence we remove such words too.
+Here are some values which tell us how largely are some words repeated and less some words occur in all of the reviews.
+
+```{r,echo=FALSE}
+dtm_martian
+dtm_hunger
+dtm_unbroken
+dtm10_martian
+dtm10_hunger
+dtm10_hunger
+```
+
+## Including Plots
+
+***************************************************************************************************************************************
+PLOTTING ACCURACY CURVES
+***************************************************************************************************************************************
+
+```{r Accuracy, echo=FALSE}
+#plot the accuracy curve
+
+#MARTIAN
+plot(num_tests_martian,accuracy_martian,xlab ="number of documents",ylab = "Accuracy",title("The Martian"),cex = 0.8,col = "red")
+lines(num_tests_martian,accuracy_martian,pch=16,col = "blue")
+
+#GOLDFINCH
+plot(num_tests_goldfinch,accuracy_goldfinch,xlab ="number of documents",ylab = "Accuracy",title("The Goldfinch"),cex = 0.8,col = "red")
+lines(num_tests_goldfinch,accuracy_goldfinch,pch=16,col = "blue")
+
+#FIFTY SHADES OF GREY
+plot(num_tests_fifty,accuracy_fifty,xlab ="number of documents",ylab = "Accuracy",title("FIFTY SHADES OF GREY"),cex = 0.8,col = "red")
+lines(num_tests_fifty,accuracy_fifty,pch=16,col = "blue")
+
+#GONE GIRL
+plot(num_tests_gone,accuracy_gone,xlab ="number of documents",ylab = "Accuracy",title("GONE GIRL"),cex = 0.8,col = "red")
+lines(num_tests_gone,accuracy_gone,pch=16,col = "blue")
+
+#THE FAULT IN OUR STARS
+plot(num_tests_stars,accuracy_stars,xlab ="number of documents",ylab = "Accuracy",title("THE FAULT IN OUR STARS"),cex = 0.8,col = "red")
+lines(num_tests_stars,accuracy_stars,pch=16,col = "blue")
+
+#UNBROKEN
+plot(num_tests_unbroken,accuracy_unbroken,xlab ="number of documents",ylab = "Accuracy",title("UNBROKEN"),cex = 0.8,col = "red")
+lines(num_tests_unbroken,accuracy_unbroken,pch=16,col = "blue")
+
+#the_girl_on_the_train
+plot(num_tests_the_girl_on_the_train,accuracy_the_girl_on_the_train,xlab ="number of documents",ylab = "Accuracy",title("THE GIRL ON THE TRAIN"),cex = 0.8,col = "red")
+lines(num_tests_the_girl_on_the_train,accuracy_the_girl_on_the_train,pch=16,col = "blue")
+
+#HUNGER GAMES
+plot(num_tests_hunger,accuracy_hunger,xlab ="number of documents",ylab = "Accuracy",title("HUNGER GAMES"),cex = 0.8,col = "red")
+lines(num_tests_hunger,accuracy_hunger,pch=16,col = "blue")
+
+```
+
+```{r ,include=FALSE}
+matrix_term_test_readable = matrix_term_freq_martian[2000:14000,]
+classifier = naiveBayes(matrix_term_freq_martian,data.all.martian[,5])
+predicted_readable = predict(classifier,matrix_term_test_readable)
+
+predicted_readable = as.matrix(predicted_readable)
+how_many = as.matrix(predicted_readable[predicted_readable[,1]==1])
+pred_stars = dim(how_many)[1]/dim(predicted_readable)[1]
+
+data_st_martian = as.matrix(data.total.martian[2000:14000,1])
+data_st_4 = as.matrix(data_st_martian[data_st_martian[,1]==4])
+data_st_5 = as.matrix(data_st_martian[data_st_martian[,1]==5])
+actual_stars = (dim(data_st_4)[1] + dim(data_st_5)[1])/dim(data_st_martian)[1]
+```
+
+*******************************************************************************************************
+```{r,echo=FALSE}
+print("THE MARTIAN")
+```
+******************************************************************************************************
+
+```{r,echo=FALSE}
+
+if(actual_stars > 0.5){
+  print("By analysing the actual data for The Martian we can see that more than 50% of the reviews have been given a 4 to 5 star");
+  print("Hence we can say that MARTIAN is readable")
+} else{
+  print("The number of 4 to 5 stars given by the users are less than 50%")
+  print("not readable from true data")
+}
+if(pred_stars > 0.5){
+  print("The Martian is readable after prediction");
+} else{
+  print("The Martian not readable after prediction")
+}
+paste0("As per our predictions the percent of people who have rated the Martian as 4 or 5 star is: ",pred_stars,"%")
+paste0("originall the 4 and 5 stars given to the book are: ",actual_stars,"%")
+```
+
+```{r ,include=FALSE}
+matrix_term_test_readable = matrix_term_freq_goldfinch[2000:14000,]
+classifier = naiveBayes(matrix_term_freq_goldfinch,data.all.goldfinch[,5])
+predicted_readable = predict(classifier,matrix_term_test_readable)
+
+predicted_readable = as.matrix(predicted_readable)
+how_many = as.matrix(predicted_readable[predicted_readable[,1]==1])
+pred_stars = dim(how_many)[1]/dim(predicted_readable)[1]
+
+data_st_goldfinch = as.matrix(data.total.goldfinch[2000:14000,1])
+data_st_4 = as.matrix(data_st_goldfinch[data_st_goldfinch[,1]==4])
+data_st_5 = as.matrix(data_st_goldfinch[data_st_goldfinch[,1]==5])
+actual_stars = (dim(data_st_4)[1] + dim(data_st_5)[1])/dim(data_st_goldfinch)[1]
+```
+
+
+
+
+*******************************************************************************************************
+```{r,echo=FALSE}
+print("THE GOLDFINCH")
+```
+******************************************************************************************************
+
+```{r,echo=FALSE}
+if(actual_stars > 0.5){
+  print("By analysing the actual data we can see that more than 50% of the reviews have been given a 4 to 5 star");
+  print("Hence we can say that it is readable")
+} else{
+  print("The number of 4 to 5 stars given by the users are less than 50%")
+  print("not readable from true data")
+}
+if(pred_stars > 0.5){
+  print("The Goldfinch is readable after prediction");
+} else{
+  print("The Goldfinch not readable after prediction")
+}
+
+paste0("As per our predictions the percent of people who have rated The goldfinch as 4 or 5 star is: ",pred_stars,"%")
+paste0("originall the 4 and 5 stars given to the book are: ",actual_stars,"%")
+
+```
+
+```{r,include=FALSE}
+matrix_term_test_readable = matrix_term_freq_fifty[2000:14000,]
+classifier = naiveBayes(matrix_term_freq_fifty,data.all.fifty[,5])
+predicted_readable = predict(classifier,matrix_term_test_readable)
+
+predicted_readable = as.matrix(predicted_readable)
+how_many = as.matrix(predicted_readable[predicted_readable[,1]==1])
+pred_stars = dim(how_many)[1]/dim(predicted_readable)[1]
+
+data_st_fifty = as.matrix(data.total.fifty[2000:14000,1])
+data_st_4 = as.matrix(data_st_fifty[data_st_fifty[,1]==4])
+data_st_5 = as.matrix(data_st_fifty[data_st_fifty[,1]==5])
+actual_stars = (dim(data_st_4)[1] + dim(data_st_5)[1])/dim(data_st_fifty)[1]
+
+```
+
+
+
+
+*******************************************************************************************************
+```{r,echo=FALSE}
+print("FIFTY SHADES OF GREY")
+```
+******************************************************************************************************
+
+```{r,echo=FALSE}
+if(actual_stars > 0.5){
+  print("By analysing the actual data we can see that more than 50% of the reviews have been given a 4 to 5 star");
+  print("Hence we can say that it is readable")
+} else{
+  print("The number of 4 to 5 stars given by the users are less than 50%")
+  print("not readable from true data")
+}
+if(pred_stars > 0.5){
+  print("The fifty is readable after prediction");
+} else{
+  print("The fifty not readable after prediction")
+}
+
+paste0("As per our predictions the percent of people who have rated The fifty as 4 or 5 star is: ",pred_stars,"%")
+paste0("originall the 4 and 5 stars given to the book are: ",actual_stars,"%")
+
+```
+
+```{r,include=FALSE}
+matrix_term_test_readable = matrix_term_freq_gone[2000:14000,]
+classifier = naiveBayes(matrix_term_freq_gone,data.all.gone[,5])
+predicted_readable = predict(classifier,matrix_term_test_readable)
+
+predicted_readable = as.matrix(predicted_readable)
+how_many = as.matrix(predicted_readable[predicted_readable[,1]==1])
+pred_stars = dim(how_many)[1]/dim(predicted_readable)[1]
+
+data_st_gone = as.matrix(data.total.gone[2000:14000,1])
+data_st_4 = as.matrix(data_st_gone[data_st_gone[,1]==4])
+data_st_5 = as.matrix(data_st_gone[data_st_gone[,1]==5])
+actual_stars = (dim(data_st_4)[1] + dim(data_st_5)[1])/dim(data_st_gone)[1]
+```
+
+
+*******************************************************************************************************
+```{r,echo=FALSE}
+print("THE GONE GIRL")
+```
+******************************************************************************************************
+
+```{r,echo=FALSE}
+if(actual_stars > 0.5){
+  print("By analysing the actual data we can see that more than 50% of the reviews have been given a 4 to 5 star");
+  print("Hence we can say that it is readable")
+} else{
+  print("The number of 4 to 5 stars given by the users are less than 50%")
+  print("not readable from true data")
+}
+if(pred_stars > 0.5){
+  print("The GONE Girl is readable after prediction");
+} else{
+  print("The Gone Girl not readable after prediction")
+}
+
+paste0("As per our predictions the percent of people who have rated The Gone Girl as 4 or 5 star is: ",pred_stars,"%")
+paste0("originally the 4 and 5 stars given to the book are: ",actual_stars,"%")
+
+```
+
+```{r,include=FALSE}
+matrix_term_test_readable = matrix_term_freq_stars[2000:14000,]
+classifier = naiveBayes(matrix_term_freq_stars,data.all.stars[,5])
+predicted_readable = predict(classifier,matrix_term_test_readable)
+
+predicted_readable = as.matrix(predicted_readable)
+how_many = as.matrix(predicted_readable[predicted_readable[,1]==1])
+pred_stars = dim(how_many)[1]/dim(predicted_readable)[1]
+
+data_st_stars = as.matrix(data.total.stars[2000:14000,1])
+data_st_4 = as.matrix(data_st_stars[data_st_stars[,1]==4])
+data_st_5 = as.matrix(data_st_stars[data_st_stars[,1]==5])
+actual_stars = (dim(data_st_4)[1] + dim(data_st_5)[1])/dim(data_st_stars)[1]
+
+```
+
+
+*******************************************************************************************************
+```{r,echo=FALSE}
+print("THE FAULT IN OUR STARS")
+```
+******************************************************************************************************
+
+```{r,echo=FALSE}
+if(actual_stars > 0.5){
+  print("By analysing the actual data we can see that more than 50% of the reviews have been given a 4 to 5 star");
+  print("Hence we can say that it is readable")
+} else{
+  print("The number of 4 to 5 stars given by the users are less than 50%")
+  print("not readable from true data")
+}
+if(pred_stars > 0.5){
+  print("The Fault In Our Stars is readable after prediction");
+} else{
+  print("The Fault In Our Stars not readable after prediction")
+}
+
+paste0("As per our predictions the percent of people who have rated The Fault in our Stars as 4 or 5 star is: ",pred_stars,"%")
+paste0("originally the 4 and 5 stars given to the book are: ",actual_stars,"%")
+
+```
+
+
+```{r,include=FALSE}
+matrix_term_test_readable = matrix_term_freq_unbroken[2000:14000,]
+classifier = naiveBayes(matrix_term_freq_unbroken,data.all.unbroken[,5])
+predicted_readable = predict(classifier,matrix_term_test_readable)
+
+predicted_readable = as.matrix(predicted_readable)
+how_many = as.matrix(predicted_readable[predicted_readable[,1]==1])
+pred_stars = dim(how_many)[1]/dim(predicted_readable)[1]
+
+data_st_unbroken = as.matrix(data.total.unbroken[2000:14000,1])
+data_st_4 = as.matrix(data_st_unbroken[data_st_unbroken[,1]==4])
+data_st_5 = as.matrix(data_st_unbroken[data_st_unbroken[,1]==5])
+actual_stars = (dim(data_st_4)[1] + dim(data_st_5)[1])/dim(data_st_unbroken)[1]
+
+```
+
+
+*******************************************************************************************************
+```{r,echo=FALSE}
+print("UNBROKEN")
+```
+******************************************************************************************************
+
+```{r,echo=FALSE}
+if(actual_stars > 0.5){
+  print("By analysing the actual data we can see that more than 50% of the reviews have been given a 4 to 5 star");
+  print("Hence we can say that it is readable")
+} else{
+  print("The number of 4 to 5 stars given by the users are less than 50%")
+  print("not readable from true data")
+}
+if(pred_stars > 0.5){
+  print("The unbroken  is readable after prediction");
+} else{
+  print("The unbroken  not readable after prediction")
+}
+
+paste0("As per our predictions the percent of people who have rated The unbroken as 4 or 5 star is: ",pred_stars,"%")
+paste0("originally the 4 and 5 stars given to the book are: ",actual_stars,"%")
+```
+
+
+```{r,include=FALSE}
+matrix_term_test_readable = matrix_term_freq_the_girl_on_the_train[2000:14000,]
+classifier = naiveBayes(matrix_term_freq_the_girl_on_the_train,data.all.the_girl_on_the_train[,5])
+predicted_readable = predict(classifier,matrix_term_test_readable)
+
+predicted_readable = as.matrix(predicted_readable)
+how_many = as.matrix(predicted_readable[predicted_readable[,1]==1])
+pred_stars = dim(how_many)[1]/dim(predicted_readable)[1]
+
+data_st_the_girl_on_the_train = as.matrix(data.total.the_girl_on_the_train[2000:14000,1])
+data_st_4 = as.matrix(data_st_the_girl_on_the_train[data_st_the_girl_on_the_train[,1]==4])
+data_st_5 = as.matrix(data_st_the_girl_on_the_train[data_st_the_girl_on_the_train[,1]==5])
+actual_stars = (dim(data_st_4)[1] + dim(data_st_5)[1])/dim(data_st_the_girl_on_the_train)[1]
+
+```
+
+
+*******************************************************************************************************
+```{r,echo=FALSE}
+print("THE GIRL ON THE TRAIN")
+```
+******************************************************************************************************
+
+```{r,echo=FALSE}
+if(actual_stars > 0.5){
+  print("By analysing the actual data we can see that more than 50% of the reviews have been given a 4 to 5 star");
+  print("Hence we can say that it is readable")
+} else{
+  print("The number of 4 to 5 stars given by the users are less than 50%")
+  print("not readable from true data")
+}
+if(pred_stars > 0.5){
+  print("The the_girl_on_the_train  is readable after prediction");
+} else{
+  print("The the_girl_on_the_train  not readable after prediction")
+}
+
+paste0("As per our predictions the percent of people who have rated The the_girl_on_the_train as 4 or 5 star is: ",pred_stars,"%")
+paste0("originally the 4 and 5 stars given to the book are: ",actual_stars,"%")
+```
+
+
+```{r,include=FALSE}
+matrix_term_test_readable = matrix_term_freq_hunger[2000:14000,]
+classifier = naiveBayes(matrix_term_freq_hunger,data.all.hunger[,5])
+predicted_readable = predict(classifier,matrix_term_test_readable)
+
+predicted_readable = as.matrix(predicted_readable)
+how_many = as.matrix(predicted_readable[predicted_readable[,1]==1])
+pred_stars = dim(how_many)[1]/dim(predicted_readable)[1]
+
+data_st_hunger = as.matrix(data.total.hunger[2000:14000,1])
+data_st_4 = as.matrix(data_st_hunger[data_st_hunger[,1]==4])
+data_st_5 = as.matrix(data_st_hunger[data_st_hunger[,1]==5])
+actual_stars = (dim(data_st_4)[1] + dim(data_st_5)[1])/dim(data_st_hunger)[1]
+```
+
+
+*******************************************************************************************************
+```{r,echo=FALSE}
+print("THE HUNGER GAMES")
+```
+******************************************************************************************************
+
+```{r,echo=FALSE}
+if(actual_stars > 0.5){
+  print("By analysing the actual data we can see that more than 50% of the reviews have been given a 4 to 5 star");
+  print("Hence we can say that it is readable")
+} else{
+  print("The number of 4 to 5 stars given by the users are less than 50%")
+  print("not readable from true data")
+}
+if(pred_stars > 0.5){
+  print("The Hunger Games  is readable after prediction");
+} else{
+  print("The Hunger Games  not readable after prediction")
+}
+
+paste0("As per our predictions the percent of people who have rated The Hunger Games as 4 or 5 star is: ",pred_stars,"%")
+paste0("originally the 4 and 5 stars given to the book are: ",actual_stars,"%")
+```
+
+
+From the above dat and plots we can make out quite easily that our predictions are good, whth only some error.
+
+So what I have done is that, as we had considered intitally that a 1 qould be assigned to any of the review that is given a 5 or 4 star and 0 other wise. Our prediction will also have values 0 and 1. Now after the prediction is the total number of 1s in the dataset is higher than fisty percent, we can say that the total number of 4 and 5 stars are more than 50 percent and hence the book is worth the users time.
+
+
+
+
+
+
