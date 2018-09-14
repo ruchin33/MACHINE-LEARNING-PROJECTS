@@ -1,2 +1,7 @@
 * linguist-vendored
 *.js linguist-vendored=false
+$ cat .gitattributes
+special-vendored-path/* linguist-vendored
+jquery.js linguist-vendored=false
+*.rb linguist-language=Python
+documented_code.rb linguist-documentation=true
