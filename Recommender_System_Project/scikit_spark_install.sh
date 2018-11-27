@@ -1,0 +1,1 @@
+pip install spark-sklearn
